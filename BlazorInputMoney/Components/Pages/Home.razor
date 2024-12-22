@@ -1,0 +1,69 @@
+﻿@page "/"
+@using System.Globalization
+
+<PageTitle>InputMoney Examples</PageTitle>
+<h3>InputMoney Examples</h3>
+
+<div class="border border-2 my-2 p-2">
+	<div>Default:</div>
+	<InputMoney @bind-Value="money1"></InputMoney>
+	<span class="ms-3">Value: @money1</span>
+</div>
+
+<div class="border border-2 my-2 p-2">
+	<div>NumberFormatInfo used to get 4 decimals:</div>
+	<InputMoney @bind-Value="money2"
+	NumberFormatInfo="@n4Fmt"></InputMoney>
+	<span class="ms-3">Value: @money2</span>
+</div>
+
+<div class="border border-2 my-2 p-2">
+	<div>Germany NumberFormatInfo:</div>
+	<InputMoney @bind-Value="money3"
+	NumberFormatInfo="@(new CultureInfo("de-DE").NumberFormat)"></InputMoney>
+	<span class="ms-3">Value: @money3</span>
+</div>
+
+<div class="border border-2 my-2 p-2">
+	<div>Not Bold, class="w-50":</div>
+	<InputMoney @bind-Value="money4" style="font-weight:normal" class="w-50";></InputMoney>
+	<span class="ms-3">Value: @money4</span>
+</div>
+
+<div class="border border-2 my-2 p-2">
+	<div>Has ID of fred:</div>
+	<InputMoney @bind-Value="money5" id="fred"></InputMoney>
+	<span class="ms-3">Value: @money5</span>
+</div>
+
+<div class="border border-2 my-2 p-2">
+	<div>DecimalDigits="3":</div>
+	<InputMoney @bind-Value="money6" DecimalDigits="3"></InputMoney>
+	<span class="ms-3">Value: @money6</span>
+</div>
+
+<div class="border border-2 my-2 p-2">
+	<div>SelectOnFocus="false":</div>
+	<InputMoney @bind-Value="money7" SelectOnFocus="false"></InputMoney>
+	<span class="ms-3">Value: @money7</span>
+</div>
+
+
+@code
+{
+	decimal money1 = 1.23m;
+	decimal money2 = 1.2345m;
+	decimal money3 = 1.23m;
+	decimal money4 = 1.23m;
+	decimal money5 = 1.23m;
+	decimal money6 = 1.23m;
+	decimal money7 = 1.23m;
+
+	NumberFormatInfo n4Fmt;
+
+	public Home()
+	{
+		n4Fmt = (NumberFormatInfo)(NumberFormatInfo.CurrentInfo.Clone());
+		n4Fmt.CurrencyDecimalDigits = 4;
+	}
+}

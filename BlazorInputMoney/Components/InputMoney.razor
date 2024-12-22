@@ -1,0 +1,115 @@
+﻿<!-- Currency Input -->
+
+@using System.Globalization
+@inject IJSRuntime JSRuntime
+
+<InputText 
+style=@userStyles
+@attributes=_attributes
+@bind-Value="@text"
+@bind-Value:after="OnInputChanged">
+</InputText>
+
+@code {
+
+    // Support @bind-Value= 
+    [Parameter]
+    public decimal Value { get; set; }
+    [Parameter]
+    public EventCallback<decimal> ValueChanged { get; set; }
+
+    // Number of digits.  Defaults to value from NumberFormatInfo (2).
+    [Parameter]
+    public int DecimalDigits { get; set; } = -1;
+
+    // Select on focus.  Defaults to true.
+    [Parameter]
+    public bool SelectOnFocus { get; set; } = true;
+
+    // Number format.  Defaults to CurrentInfo.
+    [Parameter]
+    public NumberFormatInfo? NumberFormatInfo { get; set; }
+
+    // Any additional parameters will be applied to input element.
+    [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> UnmatchedParameters { get; set; } = new Dictionary<string, object>();
+
+
+    // Attributes and styles.
+    protected IDictionary<string, object>? _attributes;
+    protected string userStyles = "";
+
+    // Working value of <input> field.
+    protected string text = "";
+
+    // Possibly edited number format.
+    protected NumberFormatInfo curNumFmt = NumberFormatInfo.CurrentInfo;
+
+    // Do limited parameter processing after first.
+    protected bool first = true;
+
+    // Setup number format.
+    protected void SetNumberFormat()
+    {
+        // User or default.
+        if (NumberFormatInfo != null) curNumFmt = NumberFormatInfo;
+
+        if (DecimalDigits != -1)
+        {
+            curNumFmt = (NumberFormatInfo)(curNumFmt.Clone());
+            curNumFmt.CurrencyDecimalDigits = DecimalDigits;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (first)
+        {
+            first = false;
+
+            // Update number format.
+            SetNumberFormat();
+
+            // Append user styles to our defaults.
+            userStyles = $"{UnmatchedParameters.GetValueOrDefault("style")}";
+            userStyles = "font-weight:bold;text-align:right;" + userStyles;
+
+            // extract non-style attributes
+            _attributes =
+              UnmatchedParameters
+              .Where(x => x.Key != "style")
+              .ToDictionary(k => k.Key, v => v.Value);
+
+            _attributes.Remove(";");
+
+            if (SelectOnFocus)
+            {
+                _attributes.Add("onfocus", "this.select()");
+            }
+        }
+
+        // Set value.
+        text = Value.ToString("C", curNumFmt);
+    }
+
+    protected async Task OnInputChanged()
+    {
+        // Convert result to decimal and send it to the client.
+        if (decimal.TryParse(text, NumberStyles.Currency, curNumFmt, out var parsedCurrency))
+        {
+            // Round
+            parsedCurrency = Decimal.Round(parsedCurrency, curNumFmt.CurrencyDecimalDigits);
+
+            // Good conversion.  Send new value.
+            await ValueChanged.InvokeAsync(parsedCurrency);
+        }
+        else
+        {
+            // Bad conversion.  Send old value.
+            await ValueChanged.InvokeAsync(Value);
+        }
+
+    }
+
+}
