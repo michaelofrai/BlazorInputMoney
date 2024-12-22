@@ -1,18 +1,20 @@
 ﻿<!-- Currency Input -->
-
 @using System.Globalization
 @inject IJSRuntime JSRuntime
 
-<InputText 
-style=@userStyles
-@attributes=_attributes
-@bind-Value="@text"
-@bind-Value:after="OnInputChanged">
+<InputText style=@userStyles
+           @attributes=_attributes
+           @bind-Value="@text"
+           @bind-Value:after="OnInputChanged">
 </InputText>
 
 @code {
 
-    // Support @bind-Value= 
+    // ======================================================================
+    // Parameters.
+    // ======================================================================
+    
+    // Support @bind-Value=
     [Parameter]
     public decimal Value { get; set; }
     [Parameter]
@@ -33,7 +35,10 @@ style=@userStyles
     // Any additional parameters will be applied to input element.
     [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object> UnmatchedParameters { get; set; } = new Dictionary<string, object>();
 
-
+    // ======================================================================
+    // Implementation.
+    // ======================================================================
+    
     // Attributes and styles.
     protected IDictionary<string, object>? _attributes;
     protected string userStyles = "";
@@ -55,6 +60,7 @@ style=@userStyles
 
         if (DecimalDigits != -1)
         {
+            // Explicit number of digits.
             curNumFmt = (NumberFormatInfo)(curNumFmt.Clone());
             curNumFmt.CurrencyDecimalDigits = DecimalDigits;
         }
@@ -75,14 +81,13 @@ style=@userStyles
             userStyles = $"{UnmatchedParameters.GetValueOrDefault("style")}";
             userStyles = "font-weight:bold;text-align:right;" + userStyles;
 
-            // extract non-style attributes
+            // Extract non-style attributes.
             _attributes =
               UnmatchedParameters
               .Where(x => x.Key != "style")
               .ToDictionary(k => k.Key, v => v.Value);
 
-            _attributes.Remove(";");
-
+            // Optional "auto-focus".
             if (SelectOnFocus)
             {
                 _attributes.Add("onfocus", "this.select()");
@@ -109,7 +114,6 @@ style=@userStyles
             // Bad conversion.  Send old value.
             await ValueChanged.InvokeAsync(Value);
         }
-
     }
 
 }
