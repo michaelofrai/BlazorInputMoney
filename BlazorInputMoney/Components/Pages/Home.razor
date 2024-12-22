@@ -6,49 +6,49 @@
 
 <div class="border border-2 my-2 p-2">
     <div>Default:</div>
-    <InputMoney @bind-Value="money1"></InputMoney>
+    <InputMoney @bind-Value="money1"/>
     <span class="ms-3">Value: @money1</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>NumberFormatInfo used to get 4 decimals:</div>
     <InputMoney @bind-Value="money2"
-                NumberFormatInfo="@n4Fmt"></InputMoney>
+                NumberFormatInfo="@n4Fmt"/>
     <span class="ms-3">Value: @money2</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>Germany NumberFormatInfo:</div>
     <InputMoney @bind-Value="money3"
-                NumberFormatInfo="@(new CultureInfo("de-DE").NumberFormat)"></InputMoney>
+                NumberFormatInfo="@(new CultureInfo("de-DE").NumberFormat)"/>
     <span class="ms-3">Value: @money3</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>Not Bold, class="w-50":</div>
     <InputMoney @bind-Value="money4"
-                style="font-weight:normal" class="w-50"></InputMoney>
+                style="font-weight:normal" class="w-50"/>
     <span class="ms-3">Value: @money4</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>Has ID of fred:</div>
     <InputMoney @bind-Value="money5"
-                id="fred"></InputMoney>
+                id="fred"/>
     <span class="ms-3">Value: @money5</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>DecimalDigits="3":</div>
     <InputMoney @bind-Value="money6"
-                DecimalDigits="3"></InputMoney>
+                DecimalDigits="3"/>
     <span class="ms-3">Value: @money6</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>SelectOnFocus="false":</div>
     <InputMoney @bind-Value="money7"
-                SelectOnFocus="false"></InputMoney>
+                SelectOnFocus="false"/>
     <span class="ms-3">Value: @money7</span>
 </div>
 
