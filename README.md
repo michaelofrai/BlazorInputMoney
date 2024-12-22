@@ -23,3 +23,5 @@ More complex example:
 `<InputMoney @bind-Value="myMoney"
     style="font-weight:normal" class="w-50"
     DecimalDigits="3"/>`
+
+[Here's a screenshot: ] (https://github.com/michaelofrai/BlazorInputMoney/blob/master/InputMoney%20Examples.pdf)
