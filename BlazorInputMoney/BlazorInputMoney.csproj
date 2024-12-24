@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="CultureWithName.cs" />
+    <Compile Remove="Lib\**" />
+    <Content Remove="Lib\**" />
+    <EmbeddedResource Remove="Lib\**" />
+    <None Remove="Lib\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Lib\" />
+    <Compile Remove="CultureWithName.cs" />
   </ItemGroup>
 
 </Project>
