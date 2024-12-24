@@ -1,54 +1,62 @@
 ﻿@page "/"
 @using System.Globalization
+@inject IJSRuntime JSRuntime
 
 <PageTitle>InputMoney Examples</PageTitle>
 <h3>InputMoney Examples</h3>
 
 <div class="border border-2 my-2 p-2">
+    <div>Language: @lang</div>
+    <div>Browser Language: @browserLang</div>
+</div>
+
+<div class="border border-2 my-2 p-2">
     <div>Default:</div>
-    <InputMoney @bind-Value="money1"/>
+    <InputMoney @bind-Value="money1" />
     <span class="ms-3">Value: @money1</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>NumberFormatInfo used to get 4 decimals:</div>
     <InputMoney @bind-Value="money2"
-                NumberFormatInfo="@n4Fmt"/>
+                NumberFormatInfo="@n4Fmt" />
     <span class="ms-3">Value: @money2</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>Germany NumberFormatInfo:</div>
     <InputMoney @bind-Value="money3"
-                NumberFormatInfo="@(new CultureInfo("de-DE").NumberFormat)"/>
+                NumberFormatInfo="@(new CultureInfo("de-DE").NumberFormat)" />
     <span class="ms-3">Value: @money3</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>Not Bold, class="w-50":</div>
     <InputMoney @bind-Value="money4"
-                style="font-weight:normal" class="w-50"/>
+                style="font-weight:normal" class="w-50" />
     <span class="ms-3">Value: @money4</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
-    <div>Has ID of fred:</div>
+    <div>Has id="fred" placeholder="Payment" size="10":</div>
     <InputMoney @bind-Value="money5"
-                id="fred"/>
+                id="fred"
+                placeholder="Payment"
+                size="10" />
     <span class="ms-3">Value: @money5</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>DecimalDigits="3":</div>
     <InputMoney @bind-Value="money6"
-                DecimalDigits="3"/>
+                DecimalDigits="3" />
     <span class="ms-3">Value: @money6</span>
 </div>
 
 <div class="border border-2 my-2 p-2">
     <div>SelectOnFocus="false":</div>
     <InputMoney @bind-Value="money7"
-                SelectOnFocus="false"/>
+                SelectOnFocus="false" />
     <span class="ms-3">Value: @money7</span>
 </div>
 
@@ -64,10 +72,32 @@
     decimal money7 = 1.23m;
 
     NumberFormatInfo n4Fmt;
+    string lang = "?";
+    string browserLang = "?";
 
+    // Constructor.
     public Home()
     {
         n4Fmt = (NumberFormatInfo)(NumberFormatInfo.CurrentInfo.Clone());
         n4Fmt.CurrencyDecimalDigits = 4;
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await GetLang();
+            await base.OnAfterRenderAsync(firstRender);
+            StateHasChanged();
+        }
+    }
+
+    async Task GetLang()
+    {
+        await using var nav = await JSRuntime.InvokeAsync<IJSObjectReference>("window.navigator.valueOf");
+        browserLang = await JSRuntime.InvokeAsync<string>("Reflect.get", nav, "language");
+
+        lang = CultureInfo.CurrentCulture.Name;
+    }
+
 }
