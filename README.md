@@ -25,3 +25,5 @@ More complex example:
     DecimalDigits="3"/>`
 
 [Here's a screenshot: ] (https://github.com/michaelofrai/BlazorInputMoney/blob/master/InputMoney%20Examples.pdf)
+
+Note:  The example (program.cs) uses the culture from the browser.
