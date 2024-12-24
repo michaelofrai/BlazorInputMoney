@@ -6,6 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Add localization.
+builder.Services.AddLocalization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -18,6 +21,14 @@ if (!app.Environment.IsDevelopment())
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+// Add localization.
+var cults = RaiCulture.AllCulturesNames();
+
+app.UseRequestLocalization(new RequestLocalizationOptions()
+    .AddSupportedCultures(cults)
+    .AddSupportedUICultures(cults));
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
